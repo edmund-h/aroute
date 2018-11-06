@@ -1,3 +1,4 @@
-target 'ARoute'
-
-pod 'ARCL'
+target 'ARoute' do
+  use_frameworks!
+  pod 'ARCL'
+end

@@ -12,9 +12,14 @@
 		88C439672191EB7000415216 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88C439652191EB7000415216 /* Main.storyboard */; };
 		88C439692191EB7500415216 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88C439682191EB7500415216 /* Assets.xcassets */; };
 		88C4396C2191EB7500415216 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88C4396A2191EB7500415216 /* LaunchScreen.storyboard */; };
+		88C439742191F32B00415216 /* NodeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C439732191F32B00415216 /* NodeFactory.swift */; };
+		88C439762191F47C00415216 /* RoutingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C439752191F47C00415216 /* RoutingClient.swift */; };
+		88C43978219202ED00415216 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C43977219202ED00415216 /* Constants.swift */; };
+		F6047CB12DBA2CF186AF9514 /* Pods_ARoute.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF04FDC1167181E8AA76D0B3 /* Pods_ARoute.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		456FA1146B7858D46679DD63 /* Pods-ARoute.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARoute.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARoute/Pods-ARoute.release.xcconfig"; sourceTree = "<group>"; };
 		88C4395E2191EB6E00415216 /* ARoute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARoute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88C439612191EB6F00415216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88C439632191EB6F00415216 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +27,11 @@
 		88C439682191EB7500415216 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		88C4396B2191EB7500415216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		88C4396D2191EB7500415216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88C439732191F32B00415216 /* NodeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeFactory.swift; sourceTree = "<group>"; };
+		88C439752191F47C00415216 /* RoutingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingClient.swift; sourceTree = "<group>"; };
+		88C43977219202ED00415216 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		EEC9528829D9E6E68747F851 /* Pods-ARoute.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARoute.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARoute/Pods-ARoute.debug.xcconfig"; sourceTree = "<group>"; };
+		FF04FDC1167181E8AA76D0B3 /* Pods_ARoute.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARoute.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +39,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6047CB12DBA2CF186AF9514 /* Pods_ARoute.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A13EC08D1F9939978C0398B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF04FDC1167181E8AA76D0B3 /* Pods_ARoute.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0AD42EA5C10044665F4503B8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EEC9528829D9E6E68747F851 /* Pods-ARoute.debug.xcconfig */,
+				456FA1146B7858D46679DD63 /* Pods-ARoute.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		88C439552191EB6900415216 = {
 			isa = PBXGroup;
 			children = (
 				88C439602191EB6E00415216 /* ARoute */,
 				88C4395F2191EB6E00415216 /* Products */,
+				0AD42EA5C10044665F4503B8 /* Pods */,
+				0A13EC08D1F9939978C0398B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +86,9 @@
 			children = (
 				88C439612191EB6F00415216 /* AppDelegate.swift */,
 				88C439632191EB6F00415216 /* ViewController.swift */,
+				88C439732191F32B00415216 /* NodeFactory.swift */,
+				88C439752191F47C00415216 /* RoutingClient.swift */,
+				88C43977219202ED00415216 /* Constants.swift */,
 				88C439652191EB7000415216 /* Main.storyboard */,
 				88C439682191EB7500415216 /* Assets.xcassets */,
 				88C4396A2191EB7500415216 /* LaunchScreen.storyboard */,
@@ -71,9 +104,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 88C439702191EB7500415216 /* Build configuration list for PBXNativeTarget "ARoute" */;
 			buildPhases = (
+				2E44720959EA1660E1588C3C /* [CP] Check Pods Manifest.lock */,
 				88C4395A2191EB6E00415216 /* Sources */,
 				88C4395B2191EB6E00415216 /* Frameworks */,
 				88C4395C2191EB6E00415216 /* Resources */,
+				EE6E9CB40EA5B393439879A6 /* [CP] Embed Pods Frameworks */,
+				EF70AF7C4DF7ABB3B1B0253C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -130,11 +166,68 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2E44720959EA1660E1588C3C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ARoute-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EE6E9CB40EA5B393439879A6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ARoute/Pods-ARoute-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ARCL/ARCL.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ARCL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARoute/Pods-ARoute-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EF70AF7C4DF7ABB3B1B0253C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARoute/Pods-ARoute-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		88C4395A2191EB6E00415216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88C43978219202ED00415216 /* Constants.swift in Sources */,
+				88C439742191F32B00415216 /* NodeFactory.swift in Sources */,
+				88C439762191F47C00415216 /* RoutingClient.swift in Sources */,
 				88C439642191EB6F00415216 /* ViewController.swift in Sources */,
 				88C439622191EB6F00415216 /* AppDelegate.swift in Sources */,
 			);
@@ -280,11 +373,13 @@
 		};
 		88C439712191EB7500415216 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EEC9528829D9E6E68747F851 /* Pods-ARoute.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H7DR849HVE;
 				INFOPLIST_FILE = ARoute/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -298,11 +393,13 @@
 		};
 		88C439722191EB7500415216 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 456FA1146B7858D46679DD63 /* Pods-ARoute.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = H7DR849HVE;
 				INFOPLIST_FILE = ARoute/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
