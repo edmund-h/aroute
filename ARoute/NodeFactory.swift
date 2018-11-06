@@ -25,7 +25,16 @@ final class NodeFactory {
         
         RoutingClient.routeTo(address2, from: address1, completion: { route in
             guard let route = route else { completion([]); return }
-            nodesFromRoute(route: route, completion: completion)
+            nodesFromRoute(route: route, completion: { routeNodes in
+                if let origin = RoutingClient.lastOrigin {
+                    nodes.append(origin)
+                }
+                nodes.append(contentsOf: routeNodes)
+                if let destination = RoutingClient.lastDestination {
+                    nodes.append(destination)
+                }
+                completion(nodes)
+            })
         })
     }
     
