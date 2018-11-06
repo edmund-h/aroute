@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ARCL
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

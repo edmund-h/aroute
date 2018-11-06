@@ -16,6 +16,7 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        mapView.setUserTrackingMode(.follow, animated: false)
         if let route = RoutingClient.lastRoute {
             plotRoute(route)
         }
@@ -29,9 +30,24 @@ class MapViewController: UIViewController {
             edgePadding: insets,
             animated: false
         )
+        if let origin = RoutingClient.lastOrigin {
+            mapView.addAnnotation(origin.mkPlacemark)
+        }
+        if let destination = RoutingClient.lastDestination {
+            mapView.addAnnotation(destination.mkPlacemark)
+        }
+        route.steps.forEach({ step in
+            let annotation = MKPlacemark(coordinate: step.polyline.coordinate)
+            mapView.addAnnotation(annotation)
+        })
     }
 }
 
 extension MapViewController: MKMapViewDelegate {
-    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKPlacemark {
+            return MKPinAnnotationView(annotation: annotation, reuseIdentifier: "PinAnnotation")
+        }
+        return nil
+    }
 }
