@@ -11,7 +11,7 @@ import SceneKit
 import MapKit
 import ARCL
 
-class ViewController: UIViewController {
+class SceneViewController: UIViewController {
     @IBOutlet weak var sceneLocationView: SceneLocationView!
     
     let mapView = MKMapView()
@@ -38,10 +38,24 @@ class ViewController: UIViewController {
             }
         })
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("run")
+        sceneLocationView.run()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        print("pause")
+        // Pause the view's session
+        sceneLocationView.pause()
+    }
 }
 
 
-extension ViewController: SceneLocationViewDelegate {
+extension SceneViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
         
     }

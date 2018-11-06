@@ -12,6 +12,9 @@ import MapKit
 typealias RouteCompletion = (MKRoute?)->()
 
 final class RoutingClient {
+    
+    static var lastRoute: MKRoute?
+    
     static func routeTo(_ destination: String, from origin: String, completion: @escaping RouteCompletion) {
         geocode(address: destination, completion: { destItem in
             geocode(address: origin, completion: { originItem in
