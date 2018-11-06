@@ -10,28 +10,31 @@ import Foundation
 import MapKit
 
 typealias RouteCompletion = (MKRoute?)->()
+typealias PlaceCompletion = (ARCLPlace?)->()
 
 final class RoutingClient {
     
     static var lastRoute: MKRoute?
+    static var lastOrigin: ARCLPlace?
+    static var lastDestination: ARCLPlace?
     
     static func routeTo(_ destination: String, from origin: String, completion: @escaping RouteCompletion) {
-        geocode(address: destination, completion: { destItem in
-            geocode(address: origin, completion: { originItem in
-                guard let destItem = destItem, let originItem = originItem else {
+        geocode(address: destination, completion: { destPlace in
+            geocode(address: origin, completion: { originPlace in
+                guard let destPlace = destPlace, let originPlace = originPlace else {
                     completion(nil)
                     return
                 }
-                requestRoute(from: originItem, to: destItem, completion: completion)
+                requestRoute(from: originPlace, to: destPlace, completion: completion)
             })
         })
     }
     
-    static func requestRoute(from: MKMapItem, to: MKMapItem, completion: @escaping RouteCompletion) {
+    static func requestRoute(from origin: ARCLPlace, to destination: ARCLPlace, completion: @escaping RouteCompletion) {
         let request: MKDirections.Request = MKDirections.Request()
         
-        request.source = from
-        request.destination = to
+        request.source = origin.mapItem
+        request.destination = destination.mapItem
         request.requestsAlternateRoutes = true
         request.transportType = .walking
         
@@ -43,6 +46,9 @@ final class RoutingClient {
                     $1.expectedTravelTime})
                 let route = routeResponse[0]
                 print("got route with \(route.steps.count) steps")
+                lastRoute = route
+                lastOrigin = origin
+                lastDestination  = destination
                 completion(route)
             } else {
                 completion(nil)
@@ -50,11 +56,10 @@ final class RoutingClient {
         })
     }
     
-    static func geocode(address: String, completion: @escaping (MKMapItem?)->()) {
+    static func geocode(address: String, completion: @escaping PlaceCompletion) {
         CLGeocoder().geocodeAddressString(address) { (placemarks, error) in
             if let first = placemarks?.first {
-                let mkFirst = MKPlacemark(placemark: first)
-                let item = MKMapItem(placemark: mkFirst)
+                let item = ARCLPlace(placemark: first)
                 print("successfully geocoded \(first.name ?? "?????")")
                 completion(item)
             } else {
@@ -63,11 +68,12 @@ final class RoutingClient {
         }
     }
     
-    static func locationFrom(coordinate: CLLocationCoordinate2D, completion: @escaping (CLLocation?)->()) {
+    static func locationFrom(coordinate: CLLocationCoordinate2D, completion: @escaping PlaceCompletion) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) in
             if let first = placemarks?.first {
-                completion(first.location)
+                let place = ARCLPlace(placemark: first)
+                completion(place)
             } else {
                 completion(nil)
             }
