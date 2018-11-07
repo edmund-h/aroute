@@ -11,16 +11,21 @@ import MapKit
 import SceneKit
 import ARCL
 
-typealias NodeCompletion = ([LocationAnnotationNode])->()
+typealias Nodes = [LocationAnnotationNode]
+typealias NodeCompletion = (Nodes)->()
 
 final class NodeFactory {
     
     static func buildDemoData(completion: @escaping NodeCompletion) {
-        var nodes: [LocationAnnotationNode] = []
+        var nodes: Nodes = []
         
+        let chelsea1 = "229 West 26th Street, New York, NY"
+        let chelsea2 = "333 W 23rd St, New York, NY 10011"
+        let inwood1 = "65 Park Terrace E, New York, NY 10034"
+        let inwood2 = "3050 Corlear Ave"
         
-        let address1 = RoutingClient.originAddress ?? "65 Park Terrace E, New York, NY 10034"
-        let address2 = RoutingClient.destAddress ?? "3050 Corlear Ave"
+        let address1 = RoutingClient.originAddress ?? chelsea1
+        let address2 = RoutingClient.destAddress ?? chelsea2
         
         print("start")
         
@@ -44,7 +49,7 @@ final class NodeFactory {
     }
     
     static func nodesFromRoute(route: MKRoute, completion: @escaping NodeCompletion) {
-        var nodes: [LocationAnnotationNode] = []
+        var nodes: Nodes = []
         let nodeGroup = DispatchGroup()
         for (index, step) in route.steps.enumerated() {
             nodeGroup.enter()

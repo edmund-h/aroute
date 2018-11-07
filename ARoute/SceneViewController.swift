@@ -19,6 +19,16 @@ class SceneViewController: UIViewController {
     var userAnnotation: MKPointAnnotation?
     var locationEstimateAnnotation: MKPointAnnotation?
     
+    var nodes: Nodes = [] {
+        didSet {
+            nodes.forEach({
+                sceneLocationView?.addLocationNodeWithConfirmedLocation(
+                    locationNode: $0
+                )
+            })
+        }
+    }
+    
     var updateUserLocationTimer: Timer?
 
     override func viewDidLoad() {
@@ -29,14 +39,17 @@ class SceneViewController: UIViewController {
         //        sceneLocationView.orientToTrueNorth = false
         
         //        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
-        sceneLocationView?.showAxesNode = true
+        sceneLocationView?.showAxesNode = false
         sceneLocationView?.locationDelegate = self
         
+        let name = Notification.Name.init("newNodes")
+        NotificationCenter.default.addObserver(self, selector: #selector(addNewNodes(_:)), name: name, object: nil)
         
         NodeFactory.buildDemoData(completion: { nodes in
-            nodes.forEach {
-                self.sceneLocationView?.addLocationNodeWithConfirmedLocation(locationNode: $0)
-            }
+            self.nodes.forEach({
+                self.sceneLocationView.removeLocationNode(locationNode: $0)
+            })
+            self.nodes = nodes
         })
     }
     
@@ -71,6 +84,15 @@ class SceneViewController: UIViewController {
             }
         }
     }
+    
+    @objc func addNewNodes(_ notification: Notification) {
+        let name = Notification.Name.init("newNodes")
+        if let userInfo = notification.userInfo,
+            let nodes = userInfo[name] as? Nodes {
+            self.nodes = nodes
+        }
+        
+    }
 }
 
 
@@ -92,9 +114,7 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        let screenCenter = CGPoint(
-            x: sceneLocationView.bounds.midX,
-            y: sceneLocationView.bounds.midY
-        )
+        
     }
+    
 }

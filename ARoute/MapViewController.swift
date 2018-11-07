@@ -52,6 +52,18 @@ extension MapViewController: MKMapViewDelegate {
         }
         return nil
     }
+    
+    func mapView(_ mapView: MKMapView,
+                 rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        
+        let polylineRenderer = MKPolylineRenderer(overlay: overlay)
+        if (overlay is MKPolyline) {
+            let red = UIColor.red.withAlphaComponent(0.75)
+            polylineRenderer.strokeColor = red
+            polylineRenderer.lineWidth = 5
+        }
+        return polylineRenderer
+    }
 }
 
 extension MapViewController: UITextFieldDelegate {
@@ -62,9 +74,14 @@ extension MapViewController: UITextFieldDelegate {
         } else {
             RoutingClient.destAddress = text
         }
-        NodeFactory.buildDemoData(completion: { _ in })
+        NodeFactory.buildDemoData(completion: { nodes in
+            let name = Notification.Name.init("newNodes")
+            NotificationCenter.default.post(name: name, object: nil, userInfo: [name:nodes])
+            if let route = RoutingClient.lastRoute {
+                self.plotRoute(route)
+            }
+        })
+        textField.resignFirstResponder()
         return true
     }
-    
-    
 }
