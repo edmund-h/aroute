@@ -20,7 +20,7 @@ class SceneViewController: UIViewController {
     var locationEstimateAnnotation: MKPointAnnotation?
     
     var nodesAndLines: [LocationAnnotationNode : SCNNode?] = [:]
-    
+    var nodesOrdered: [Int : LocationAnnotationNode] = [:]
     var nodes: Nodes {
         return Array(nodesAndLines.keys)
     }
@@ -46,6 +46,7 @@ class SceneViewController: UIViewController {
                 self.sceneLocationView.removeLocationNode(locationNode: $0)
             })
             self.setNodes(nodes)
+            self.makeLinesForNodes()
         })
     }
     
@@ -86,6 +87,7 @@ class SceneViewController: UIViewController {
         if let userInfo = notification.userInfo,
             let nodes = userInfo[name] as? Nodes {
             setNodes(nodes)
+            makeLinesForNodes()
         }
         
     }
@@ -109,28 +111,15 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        guard let pointOfView = sceneLocationView.pointOfView else { return }
-        
-        let mat = pointOfView.transform
-        let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
-        let currentPosition = pointOfView.position + (dir * SCNFloat(0.1))
-        
-        //if let lineNode = lineNode {
-        let sceneNodeLoc = locationNode.position
-        let line = lineFrom(vector: sceneNodeLoc, toVector: currentPosition)
-        let lineNode = SCNNode(geometry: line)
-        lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.75)
-        sceneLocationView.scene.rootNode.addChildNode(lineNode)
-        if let thisNode = locationNode as? LocationAnnotationNode {
-            if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
-                oldLine.removeFromParentNode()
-            }
-            nodesAndLines[thisNode] = lineNode
-        }
-        //}
-        glLineWidth(20)
-        
-        
+//        guard let pointOfView = sceneLocationView.pointOfView else { return }
+//
+//        let mat = pointOfView.transform
+//        let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
+//        let currentPosition = pointOfView.position + (dir * SCNFloat(0.1))
+//        locationNode.location.coordinate
+//        if let thisNode = locationNode as? LocationAnnotationNode{
+//        }
+        makeLinesForNodes()
     }
     
     func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNGeometry {
@@ -146,11 +135,34 @@ extension SceneViewController: SceneLocationViewDelegate {
     
     func setNodes(_ newNodes: Nodes) {
         nodesAndLines = [:]
+        nodesOrdered = [:]
         newNodes.forEach({
             sceneLocationView?.addLocationNodeWithConfirmedLocation(
                 locationNode: $0
             )
         })
+        newNodes.enumerated().forEach({index, node in
+            nodesOrdered[index] = node
+        })
         newNodes.forEach({ nodesAndLines[$0] = nil })
+    }
+    
+    func makeLinesForNodes() {
+        nodesOrdered.keys.forEach({ index in
+            if let thisNode = nodesOrdered[index - 1],
+                let nextNode = nodesOrdered[index] {
+                let nextNodePosition = nextNode.position
+                let thisNodePosition = thisNode.position
+                let line = lineFrom(vector: nextNodePosition, toVector: thisNodePosition)
+                let lineNode = SCNNode(geometry: line)
+                lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.75)
+                sceneLocationView.scene.rootNode.addChildNode(lineNode)
+                if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
+                    oldLine.removeFromParentNode()
+                }
+                nodesAndLines[thisNode] = lineNode
+                glLineWidth(20)
+            }
+        })
     }
 }

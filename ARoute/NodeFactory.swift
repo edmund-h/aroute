@@ -37,7 +37,7 @@ final class NodeFactory {
                     nodes.append(origin)
                     print("got origin, alt: \(origin.altitude ?? 999)")
                 }
-                nodes.append(contentsOf: routeNodes)
+                //nodes.append(contentsOf: routeNodes)
                 if let destination = RoutingClient.lastDestination {
                     destination.name = "destination"
                     nodes.append(destination)
