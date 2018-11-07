@@ -100,19 +100,41 @@
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="5Sd-64-vp7" id="jcd-lw-15e"/>
+                                        </connections>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="85k-TJ-JhM">
                                         <rect key="frame" x="10" y="55" width="355" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="5Sd-64-vp7" id="8Sg-7I-jDT"/>
+                                        </connections>
                                     </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Origin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQM-xs-ZMw">
+                                        <rect key="frame" x="10" y="34" width="46" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Destination" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="src-FT-R8K">
+                                        <rect key="frame" x="10" y="94" width="87" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="src-FT-R8K" firstAttribute="leading" secondItem="85k-TJ-JhM" secondAttribute="leading" id="2DA-Tt-eQ0"/>
                                     <constraint firstItem="85k-TJ-JhM" firstAttribute="width" secondItem="6FM-wM-dQF" secondAttribute="width" constant="-20" id="DoZ-rk-h0q"/>
+                                    <constraint firstItem="85k-TJ-JhM" firstAttribute="top" secondItem="pQM-xs-ZMw" secondAttribute="bottom" id="HTO-0B-t1W"/>
                                     <constraint firstItem="2cs-Bh-tT0" firstAttribute="centerY" secondItem="6FM-wM-dQF" secondAttribute="centerY" constant="30" id="MDm-6h-Ne4"/>
                                     <constraint firstItem="2cs-Bh-tT0" firstAttribute="centerX" secondItem="6FM-wM-dQF" secondAttribute="centerX" id="OvL-DF-kcr"/>
+                                    <constraint firstItem="pQM-xs-ZMw" firstAttribute="leading" secondItem="85k-TJ-JhM" secondAttribute="leading" id="T0w-2j-77L"/>
+                                    <constraint firstItem="2cs-Bh-tT0" firstAttribute="top" secondItem="src-FT-R8K" secondAttribute="bottom" id="XYa-hq-0nc"/>
                                     <constraint firstItem="2cs-Bh-tT0" firstAttribute="width" secondItem="6FM-wM-dQF" secondAttribute="width" constant="-20" id="eBh-42-FqW"/>
                                     <constraint firstItem="85k-TJ-JhM" firstAttribute="centerX" secondItem="6FM-wM-dQF" secondAttribute="centerX" id="oqh-Mx-WG1"/>
                                     <constraint firstItem="85k-TJ-JhM" firstAttribute="centerY" secondItem="6FM-wM-dQF" secondAttribute="centerY" constant="-30" id="yml-Xx-77S"/>
@@ -134,7 +156,9 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" id="dZh-Tx-AIQ"/>
                     <connections>
+                        <outlet property="destTextField" destination="2cs-Bh-tT0" id="8so-5W-JuR"/>
                         <outlet property="mapView" destination="hHK-mo-7pZ" id="u0A-ya-mh6"/>
+                        <outlet property="originTextField" destination="85k-TJ-JhM" id="igz-Vq-WZX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mep-NC-k0n" userLabel="First Responder" sceneMemberID="firstResponder"/>
