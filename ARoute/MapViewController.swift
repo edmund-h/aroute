@@ -12,6 +12,8 @@ import MapKit
 class MapViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var originTextField: UITextField!
+    @IBOutlet weak var destTextField: UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,4 +52,19 @@ extension MapViewController: MKMapViewDelegate {
         }
         return nil
     }
+}
+
+extension MapViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let text = textField.text
+        if textField == originTextField {
+            RoutingClient.originAddress = text
+        } else {
+            RoutingClient.destAddress = text
+        }
+        NodeFactory.buildDemoData(completion: { _ in })
+        return true
+    }
+    
+    
 }

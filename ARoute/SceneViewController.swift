@@ -13,6 +13,7 @@ import ARCL
 
 class SceneViewController: UIViewController {
     @IBOutlet weak var sceneLocationView: SceneLocationView!
+    @IBOutlet weak var label: UILabel!
     
     let mapView = MKMapView()
     var userAnnotation: MKPointAnnotation?
@@ -52,20 +53,38 @@ class SceneViewController: UIViewController {
         // Pause the view's session
         sceneLocationView.pause()
     }
+    
+    @IBAction func setNorth() {
+        mapView.setUserTrackingMode(.follow, animated: false)
+        guard let heading = mapView.userLocation.heading else {return}
+        let upperBound =  heading.trueHeading < 1.0
+        let lowerBound = heading.trueHeading > -1.0
+        if upperBound && lowerBound {
+            var sceneFacingDegrees = sceneLocationView.sceneNode?.eulerAngles.y.radiansToDegrees ?? 0
+            while sceneFacingDegrees > 180 {
+                sceneLocationView.moveSceneHeadingAntiClockwise()
+                sceneFacingDegrees = sceneLocationView.sceneNode?.eulerAngles.y.radiansToDegrees ?? 0
+            }
+            while sceneFacingDegrees < 180 {
+                sceneLocationView.moveSceneHeadingClockwise()
+                sceneFacingDegrees = sceneLocationView.sceneNode?.eulerAngles.y.radiansToDegrees ?? 0
+            }
+        }
+    }
 }
 
 
 extension SceneViewController: SceneLocationViewDelegate {
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
-        
+        //print("add scene location estimate, position: \(position), location: \(location.coordinate), Xaccuracy: \(location.horizontalAccuracy), Yaccuracy: \(location.verticalAccuracy), date: \(location.timestamp)")
     }
     
     func sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
         
+        //print("remove scene location estimate, position: \(position), location: \(location.coordinate), accuracy: \(location.horizontalAccuracy), date: \(location.timestamp)")
     }
     
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
-        
     }
     
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
@@ -73,8 +92,9 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        
+        let screenCenter = CGPoint(
+            x: sceneLocationView.bounds.midX,
+            y: sceneLocationView.bounds.midY
+        )
     }
-    
-    
 }

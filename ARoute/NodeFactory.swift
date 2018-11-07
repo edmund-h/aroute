@@ -14,12 +14,13 @@ import ARCL
 typealias NodeCompletion = ([LocationAnnotationNode])->()
 
 final class NodeFactory {
+    
     static func buildDemoData(completion: @escaping NodeCompletion) {
         var nodes: [LocationAnnotationNode] = []
         
         
-        let address1 = "65 Park Terrace E, New York, NY 10034"
-        let address2 = "600 W 218th St, New York, NY 10034"
+        let address1 = RoutingClient.originAddress ?? "65 Park Terrace E, New York, NY 10034"
+        let address2 = RoutingClient.destAddress ?? "3050 Corlear Ave"
         
         print("start")
         
@@ -27,11 +28,15 @@ final class NodeFactory {
             guard let route = route else { completion([]); return }
             nodesFromRoute(route: route, completion: { routeNodes in
                 if let origin = RoutingClient.lastOrigin {
+                    origin.name = "origin"
                     nodes.append(origin)
+                    print("got origin, alt: \(origin.altitude ?? 999)")
                 }
                 nodes.append(contentsOf: routeNodes)
                 if let destination = RoutingClient.lastDestination {
+                    destination.name = "destination"
                     nodes.append(destination)
+                    print("got destination, alt: \(destination.altitude ?? 999)")
                 }
                 completion(nodes)
             })
@@ -45,15 +50,13 @@ final class NodeFactory {
             nodeGroup.enter()
             let polyCoord = step.polyline.coordinate
             RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
-                guard let coord = location?.coordinate, let alt = location?.altitude else {
+                guard let location = location else {
                     nodeGroup.leave()
                     return
                 }
-                let lat = coord.latitude
-                let lon = coord.longitude
-                let node = buildNode(latitude: lat, longitude: lon, altitude: alt, imageName: Constants.downArrow)
-                nodes.append(node)
-                print("got node for step \(index)")
+                location.name = "step \(index)"
+                nodes.append(location)
+                print("got node for step \(index), alt: \(location.altitude ?? 999)")
                 nodeGroup.leave()
             })
         }
