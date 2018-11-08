@@ -46,7 +46,6 @@ class SceneViewController: UIViewController {
                 self.sceneLocationView.removeLocationNode(locationNode: $0)
             })
             self.setNodes(nodes)
-            self.makeLinesForNodes()
         })
     }
     
@@ -85,9 +84,8 @@ class SceneViewController: UIViewController {
     @objc func addNewNodes(_ notification: Notification) {
         let name = Notification.Name.init("newNodes")
         if let userInfo = notification.userInfo,
-            let nodes = userInfo[name] as? Nodes {
+            let nodes = userInfo[name] as? OrderedNodes {
             setNodes(nodes)
-            makeLinesForNodes()
         }
         
     }
@@ -111,40 +109,31 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-//        guard let pointOfView = sceneLocationView.pointOfView else { return }
-//
-//        let mat = pointOfView.transform
-//        let dir = SCNVector3(-1 * mat.m31, -1 * mat.m32, -1 * mat.m33)
-//        let currentPosition = pointOfView.position + (dir * SCNFloat(0.1))
-//        locationNode.location.coordinate
-//        if let thisNode = locationNode as? LocationAnnotationNode{
-//        }
+       
         makeLinesForNodes()
     }
     
-    func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNGeometry {
+    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 3) -> SCNNode{
         
-        let indices: [Int32] = [0, 1]
-        
-        let source = SCNGeometrySource(vertices: [vector1, vector2])
-        let element = SCNGeometryElement(indices: indices, primitiveType: .line)
-        
-        return SCNGeometry(sources: [source], elements: [element])
-        
+        let lengthVector = vector1 - vector2
+        let length = lengthVector.length()
+        let line = SCNCylinder(radius: radius, height: CGFloat(length))
+        line.radialSegmentCount = 4
+        let node = SCNNode(geometry: line)
+        node.position = (vector1 + vector2)/2
+        node.eulerAngles = SCNVector3.lineEulerAngles(vector: lengthVector)
+        return node
     }
     
-    func setNodes(_ newNodes: Nodes) {
+    func setNodes(_ newNodes: OrderedNodes) {
         nodesAndLines = [:]
-        nodesOrdered = [:]
-        newNodes.forEach({
+        nodesOrdered = newNodes
+        newNodes.values.forEach({
             sceneLocationView?.addLocationNodeWithConfirmedLocation(
                 locationNode: $0
             )
         })
-        newNodes.enumerated().forEach({index, node in
-            nodesOrdered[index] = node
-        })
-        newNodes.forEach({ nodesAndLines[$0] = nil })
+        makeLinesForNodes()
     }
     
     func makeLinesForNodes() {
@@ -153,15 +142,13 @@ extension SceneViewController: SceneLocationViewDelegate {
                 let nextNode = nodesOrdered[index] {
                 let nextNodePosition = nextNode.position
                 let thisNodePosition = thisNode.position
-                let line = lineFrom(vector: nextNodePosition, toVector: thisNodePosition)
-                let lineNode = SCNNode(geometry: line)
-                lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.75)
+                let lineNode = lineFrom(thisNodePosition, to: nextNodePosition)
+                lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
                 sceneLocationView.scene.rootNode.addChildNode(lineNode)
                 if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
                     oldLine.removeFromParentNode()
                 }
                 nodesAndLines[thisNode] = lineNode
-                glLineWidth(20)
             }
         })
     }

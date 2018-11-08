@@ -12,3 +12,4 @@ import UIKit
 final class Constants {
     static var downArrow = "down-arrow-2"
 }
+
