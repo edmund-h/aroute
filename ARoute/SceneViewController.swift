@@ -52,7 +52,7 @@ class SceneViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("run")
-        sceneLocationView.run()
+        sceneLocationView.runWithVerticalDetection()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
