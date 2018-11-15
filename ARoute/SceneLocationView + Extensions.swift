@@ -32,20 +32,20 @@ extension SceneLocationView {
         // Run the view's session *again*
         session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
-    
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        guard let plane = anchor as? ARPlaneAnchor,
-            let device = renderer.device,
-            let geometry = ARSCNPlaneGeometry(device: device)
-            else { return nil }
-        geometry.update(from: plane.geometry)
-        let maskMaterial = SCNMaterial()
-        maskMaterial.colorBufferWriteMask = []
-        geometry.materials = [maskMaterial]
-        let node = SCNNode(geometry: geometry)
-        node.renderingOrder = -1
-        return node
-    }
+//    
+//    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+//        guard let plane = anchor as? ARPlaneAnchor,
+//            let device = renderer.device,
+//            let geometry = ARSCNPlaneGeometry(device: device)
+//            else { return nil }
+//        geometry.update(from: plane.geometry)
+//        let maskMaterial = SCNMaterial()
+//        maskMaterial.colorBufferWriteMask = []
+//        geometry.materials = [maskMaterial]
+//        let node = SCNNode(geometry: geometry)
+//        node.renderingOrder = -1
+//        return node
+//    }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let plane = anchor as? ARPlaneAnchor,

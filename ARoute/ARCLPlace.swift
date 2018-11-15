@@ -11,6 +11,7 @@ import ARCL
 
 class ARCLPlace: LocationAnnotationNode {
     var clPlacemark: CLPlacemark
+    private var googleAltitude: Double?
     
     var mkPlacemark: MKPlacemark {
         return MKPlacemark(placemark: clPlacemark)
@@ -25,7 +26,15 @@ class ARCLPlace: LocationAnnotationNode {
     }
     
     var altitude: CLLocationDistance? {
-        return clPlacemark.location?.altitude
+        get {
+            if let alt = googleAltitude {
+                return alt
+            }
+            return clPlacemark.location?.altitude
+        }
+        set {
+            self.googleAltitude = altitude
+        }
     }
     
     init(placemark: CLPlacemark) {

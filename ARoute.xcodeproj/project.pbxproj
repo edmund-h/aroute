@@ -19,6 +19,7 @@
 		88C4397E219216DA00415216 /* ARCLPlace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4397D219216DA00415216 /* ARCLPlace.swift */; };
 		88C43980219384C200415216 /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4397F219384C200415216 /* SCNVector3+Extensions.swift */; };
 		88C4399721961A6300415216 /* SceneLocationView + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4399621961A6300415216 /* SceneLocationView + Extensions.swift */; };
+		88C439B9219B62BC00415216 /* GoogleElevationClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C439B8219B62BB00415216 /* GoogleElevationClient.swift */; };
 		F6047CB12DBA2CF186AF9514 /* Pods_ARoute.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF04FDC1167181E8AA76D0B3 /* Pods_ARoute.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		88C4397D219216DA00415216 /* ARCLPlace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCLPlace.swift; sourceTree = "<group>"; };
 		88C4397F219384C200415216 /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		88C4399621961A6300415216 /* SceneLocationView + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneLocationView + Extensions.swift"; sourceTree = "<group>"; };
+		88C439B8219B62BB00415216 /* GoogleElevationClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleElevationClient.swift; sourceTree = "<group>"; };
 		EEC9528829D9E6E68747F851 /* Pods-ARoute.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARoute.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARoute/Pods-ARoute.debug.xcconfig"; sourceTree = "<group>"; };
 		FF04FDC1167181E8AA76D0B3 /* Pods_ARoute.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARoute.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -97,6 +99,7 @@
 				88C4397B2192133200415216 /* MapViewController.swift */,
 				88C439732191F32B00415216 /* NodeFactory.swift */,
 				88C439752191F47C00415216 /* RoutingClient.swift */,
+				88C439B8219B62BB00415216 /* GoogleElevationClient.swift */,
 				88C4399621961A6300415216 /* SceneLocationView + Extensions.swift */,
 				88C4397F219384C200415216 /* SCNVector3+Extensions.swift */,
 				88C4397D219216DA00415216 /* ARCLPlace.swift */,
@@ -244,6 +247,7 @@
 				88C43980219384C200415216 /* SCNVector3+Extensions.swift in Sources */,
 				88C4397E219216DA00415216 /* ARCLPlace.swift in Sources */,
 				88C439762191F47C00415216 /* RoutingClient.swift in Sources */,
+				88C439B9219B62BC00415216 /* GoogleElevationClient.swift in Sources */,
 				88C439642191EB6F00415216 /* SceneViewController.swift in Sources */,
 				88C439622191EB6F00415216 /* AppDelegate.swift in Sources */,
 			);

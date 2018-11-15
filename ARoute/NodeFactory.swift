@@ -21,13 +21,15 @@ final class NodeFactory {
     static func buildDemoData(completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         
-        let chelsea1 = "229 West 26th Street, New York, NY"
-        let chelsea2 = "333 W 23rd St, New York, NY 10011"
+        let paloAlto = "3600 West Bayshore Rd, Palo Alto, CA, 94303"
+        let cupertino = "17100 Montebello Rd, Cupertino, CA 95014"
+        //let chelsea1 = "229 West 26th Street, New York, NY"
+        //let chelsea2 = "333 W 23rd St, New York, NY 10011"
         //let inwood1 = "65 Park Terrace E, New York, NY 10034"
         //let inwood2 = "3050 Corlear Ave"
         
-        let address1 = RoutingClient.originAddress ?? chelsea1
-        let address2 = RoutingClient.destAddress ?? chelsea2
+        let address1 = RoutingClient.originAddress ?? paloAlto
+        let address2 = RoutingClient.destAddress ?? cupertino
         
         print("start")
         
@@ -69,6 +71,7 @@ final class NodeFactory {
         }
         nodeGroup.notify(queue: .main) {
             print("finished getting nodes")
+            GoogleElevationClient.getElevationFor(nodes: nodes, completion: { _ in })
             completion(nodes)
         }
     }

@@ -24,6 +24,9 @@ class SceneViewController: UIViewController {
     var nodes: Nodes {
         return Array(nodesAndLines.keys)
     }
+    var lines: [SCNNode?] {
+        return Array(nodesAndLines.values)
+    }
     
     var updateUserLocationTimer: Timer?
 
@@ -41,18 +44,15 @@ class SceneViewController: UIViewController {
         let name = Notification.Name.init("newNodes")
         NotificationCenter.default.addObserver(self, selector: #selector(addNewNodes(_:)), name: name, object: nil)
         
-        NodeFactory.buildDemoData(completion: { nodes in
-            self.nodes.forEach({
-                self.sceneLocationView.removeLocationNode(locationNode: $0)
-            })
-            self.setNodes(nodes)
-        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("run")
-        sceneLocationView.runWithVerticalDetection()
+        getNodes {
+            print("run")
+            //sceneLocationView.runWithVerticalDetection()
+            self.sceneLocationView.run()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -113,12 +113,12 @@ extension SceneViewController: SceneLocationViewDelegate {
         makeLinesForNodes()
     }
     
-    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 3) -> SCNNode{
+    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> SCNNode{
         
         let lengthVector = vector1 - vector2
         let length = lengthVector.length()
         let line = SCNCylinder(radius: radius, height: CGFloat(length))
-        line.radialSegmentCount = 4
+        line.radialSegmentCount = 24
         let node = SCNNode(geometry: line)
         node.position = (vector1 + vector2)/2
         node.eulerAngles = SCNVector3.lineEulerAngles(vector: lengthVector)
@@ -150,6 +150,19 @@ extension SceneViewController: SceneLocationViewDelegate {
                 }
                 nodesAndLines[thisNode] = lineNode
             }
+        })
+    }
+    
+    func getNodes(then completion: @escaping ()->()) {
+        NodeFactory.buildDemoData(completion: { nodes in
+            self.nodes.forEach({
+                self.sceneLocationView.removeLocationNode(locationNode: $0)
+            })
+            self.lines.forEach({
+                $0?.removeFromParentNode()
+            })
+            self.setNodes(nodes)
+            completion()
         })
     }
 }

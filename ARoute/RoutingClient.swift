@@ -76,6 +76,7 @@ final class RoutingClient {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) in
             if let first = placemarks?.first {
+                print(first.location?.altitude)
                 let place = ARCLPlace(placemark: first)
                 completion(place)
             } else {
