@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 final class Constants {
-    static var downArrow = "down-arrow-2"
+    static let downArrow = "down-arrow-2"
+    static let tinyTrsp = "tinyTransparent"
+    static let earthRadius = 6371000.0
 }
 
