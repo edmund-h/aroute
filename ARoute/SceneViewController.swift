@@ -115,7 +115,6 @@ extension SceneViewController: SceneLocationViewDelegate {
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
         debugNorthDirection()
-        //addAnchorsToNodes()
         makeLinesForNodes()
     }
     

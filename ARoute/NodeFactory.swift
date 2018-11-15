@@ -50,32 +50,34 @@ final class NodeFactory {
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         let nodeGroup = DispatchGroup()
-//        let pointCount = route.polyline.pointCount
-//        for i in 0 ..< pointCount {
-//            let point = route.polyline.points()[i]
-//            let lat = point.coordinate.latitude
-//            let lon = point.coordinate.longitude
-//            nodes[i + 1] = buildNode(latitude: lat, longitude: lon, altitude: 0, imageName: Constants.tinyTrsp)
+        let pointCount = route.polyline.pointCount
+        for i in 0 ..< pointCount {
+            let point = route.polyline.points()[i]
+            let lat = point.coordinate.latitude
+            let lon = point.coordinate.longitude
+            if i % 2 == 0 {
+                nodes[i + 1] = buildNode(latitude: lat, longitude: lon, altitude: 0, imageName: Constants.tinyTrsp)
+            }
+        }
+//
+//        for (index, step) in route.steps.enumerated() {
+//            nodeGroup.enter()
+//            let polyCoord = step.polyline.coordinate
+//            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
+//                guard let location = location else {
+//                    nodeGroup.leave()
+//                    return
+//                }
+//                location.name = "step \(index)"
+//                nodes[index + 1] = location
+//                print("got node for step \(index), alt: \(location.altitude ?? 999)")
+//                nodeGroup.leave()
+//            })
 //        }
-        
-        for (index, step) in route.steps.enumerated() {
-            nodeGroup.enter()
-            let polyCoord = step.polyline.coordinate
-            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
-                guard let location = location else {
-                    nodeGroup.leave()
-                    return
-                }
-                location.name = "step \(index)"
-                nodes[index + 1] = location
-                print("got node for step \(index), alt: \(location.altitude ?? 999)")
-                nodeGroup.leave()
-            })
-        }
-        nodeGroup.notify(queue: .main) {
-            print("finished getting nodes")
-            completion(nodes)
-        }
+//        nodeGroup.notify(queue: .main) {
+//            print("finished getting nodes")
+//            completion(nodes)
+//        }
     }
     
     static func buildNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees, altitude: CLLocationDistance, imageName: String) -> LocationAnnotationNode {
