@@ -42,12 +42,14 @@ final class RoutingClient {
         request.transportType = .walking
         
         let directions = MKDirections(request: request)
-        directions.calculate (completionHandler: {
-            response, error in
+        directions.calculate (completionHandler: { response, error in
+            
             if var routeResponse = response?.routes, routeResponse.count > 0 {
+                
                 routeResponse = routeResponse.sorted(by: {
                     $0.expectedTravelTime < $1.expectedTravelTime
                 })
+                print(routeResponse)
                 let route = routeResponse[0]
                 print("got route with \(route.steps.count) steps")
                 lastRoute = route

@@ -8,6 +8,7 @@
 
 import UIKit
 import SceneKit
+import ARKit
 import MapKit
 import ARCL
 
@@ -52,7 +53,7 @@ class SceneViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("run")
-        sceneLocationView.runWithVerticalDetection()
+        sceneLocationView.run()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -103,22 +104,32 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
+        let sceneview = sceneLocationView as ARSCNView
+        if let anchor = sceneview.anchor(for: node) {
+            sceneview.session.add(anchor: anchor)
+        }
     }
     
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-       
+        debugNorthDirection()
+        //addAnchorsToNodes()
         makeLinesForNodes()
     }
     
-    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 3) -> SCNNode{
+    func addAnchorsToNodes() {
+        nodesOrdered.values.forEach({ node in
+        })
+    }
+    
+    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> SCNNode{
         
         let lengthVector = vector1 - vector2
         let length = lengthVector.length()
         let line = SCNCylinder(radius: radius, height: CGFloat(length))
-        line.radialSegmentCount = 4
+        line.radialSegmentCount = 12
         let node = SCNNode(geometry: line)
         node.position = (vector1 + vector2)/2
         node.eulerAngles = SCNVector3.lineEulerAngles(vector: lengthVector)
@@ -151,5 +162,49 @@ extension SceneViewController: SceneLocationViewDelegate {
                 nodesAndLines[thisNode] = lineNode
             }
         })
+    }
+    
+    func debugNorthDirection() {
+        //this function from github is 3 feet more accurate than what is currently in the pod : [
+        let now = mapView.userLocation.coordinate
+        
+        let coord = now.coordinateWithBearing(bearing: 0, distanceMeters: 500)
+        let newcoord = now.newWayCoordinateWithBearing(bearing: 0, distanceMeters: 500)
+        
+        let latDelta = coord.latitude - newcoord.latitude
+        let lonDelta = coord.longitude - newcoord.longitude
+        let latDeltaStr = String(format: "latitude: %.20f", latDelta)
+        let lonDeltaStr = String(format: "longitude: %.20f", lonDelta)
+        print("\(latDeltaStr), \(lonDeltaStr)")
+    }
+}
+
+extension CLLocationCoordinate2D {
+    
+    public func newWayCoordinateWithBearing(bearing: Double, distanceMeters: Double) -> CLLocationCoordinate2D {
+        // formula by http://www.movable-type.co.uk/scripts/latlong.html
+        let lat1 = self.latitude * Double.pi / 180
+        let lon1 = self.longitude * Double.pi / 180
+        
+        let distance = distanceMeters / Constants.earthRadius
+        let angularBearing = bearing * Double.pi / 180
+        
+        var lat2 = lat1 + distance * cos(angularBearing)
+        let dLat = lat2 - lat1
+        let dPhi = log(tan(lat2 / 2 + Double.pi/4) / tan(lat1 / 2 + Double.pi/4))
+        let q = (dPhi != 0) ? dLat/dPhi : cos(lat1)  // E-W line gives dPhi=0
+        let dLon = distance * sin(angularBearing) / q
+        
+        // check for some daft bugger going past the pole
+        if fabs(lat2) > Double.pi/2 {
+            lat2 = lat2 > 0 ? Double.pi - lat2 : -(Double.pi - lat2)
+        }
+        var lon2 = lon1 + dLon + 3 * Double.pi
+        while lon2 > 2 * Double.pi {
+            lon2 -= 2 * Double.pi
+        }
+        lon2 -= Double.pi
+        
+        return CLLocationCoordinate2D(latitude: lat2 * 180 / Double.pi, longitude: lon2 * 180 / Double.pi)
     }
 }

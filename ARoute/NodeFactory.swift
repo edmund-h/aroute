@@ -21,13 +21,10 @@ final class NodeFactory {
     static func buildDemoData(completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         
-        let chelsea1 = "229 West 26th Street, New York, NY"
-        let chelsea2 = "333 W 23rd St, New York, NY 10011"
-        //let inwood1 = "65 Park Terrace E, New York, NY 10034"
-        //let inwood2 = "3050 Corlear Ave"
-        
-        let address1 = RoutingClient.originAddress ?? chelsea1
-        let address2 = RoutingClient.destAddress ?? chelsea2
+        let addr1 = "3600 W Bayshore RdPalo Alto, CA 94303"
+        let addr2 = "4050 Middlefield Rd, Palo Alto, CA 94303"
+        let address1 = RoutingClient.originAddress ?? addr1
+        let address2 = RoutingClient.destAddress ?? addr2
         
         print("start")
         
@@ -53,6 +50,14 @@ final class NodeFactory {
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         let nodeGroup = DispatchGroup()
+//        let pointCount = route.polyline.pointCount
+//        for i in 0 ..< pointCount {
+//            let point = route.polyline.points()[i]
+//            let lat = point.coordinate.latitude
+//            let lon = point.coordinate.longitude
+//            nodes[i + 1] = buildNode(latitude: lat, longitude: lon, altitude: 0, imageName: Constants.tinyTrsp)
+//        }
+        
         for (index, step) in route.steps.enumerated() {
             nodeGroup.enter()
             let polyCoord = step.polyline.coordinate
