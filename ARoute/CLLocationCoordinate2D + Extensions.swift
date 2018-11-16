@@ -9,7 +9,13 @@
 import Foundation
 import MapKit
 
-extension CLLocationCoordinate2D {
+extension CLLocationCoordinate2D: Equatable {
+    
+    public static func == (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D)-> Bool {
+        let latEqual = left.latitude == right.latitude
+        let lonEqual = right.longitude == left.longitude
+        return latEqual && lonEqual
+    }
     
     static func + (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D)-> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: left.latitude + right.latitude, longitude: left.longitude + right.longitude)
@@ -47,3 +53,10 @@ extension CLLocationCoordinate2D {
     }
 }
 
+extension CLLocationCoordinate2D: Hashable {
+    public var hashValue: Int {
+        get {
+            return "Latitude:\(self.latitude),Longitude:\(self.longitude)".hashValue
+        }
+    }
+}

@@ -50,43 +50,44 @@ final class NodeFactory {
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         let nodeGroup = DispatchGroup()
-        let pointCount = route.polyline.pointCount
-        var pointsArray: [CLLocationCoordinate2D] = []
-        for i in 0 ..< pointCount {
-            let point = route.polyline.points()[i]
-            if i > 0 && i < (pointCount - 1) { //keep first and last point
-                let lastPoint = route.polyline.points()[i - 1]
-                let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
-                if abs(bearing) > 10 {
-                    //keep the rest so long as a significant turn occurs)
+        
+        for (index, step) in route.steps.enumerated() {
+            //            nodeGroup.enter()
+            //            let polyCoord = step.polyline.coordinate
+            //            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
+            //                guard let location = location else {
+            //                    nodeGroup.leave()
+            //                    return
+            //                }
+            //                location.name = "step \(index)"
+            //                nodes[index + 1] = location
+            //                print("got node for step \(index), alt: \(location.altitude ?? 999)")
+            //                nodeGroup.leave()
+            //            })
+            guard index == 0 else {continue}
+            let pointCount = step.polyline.pointCount
+            var pointsArray: [CLLocationCoordinate2D] = []
+            for i in 0 ..< pointCount {
+                let point = route.polyline.points()[i]
+                if i > 0 && i < (pointCount - 1) { //keep first and last point
+                    let lastPoint = route.polyline.points()[i - 1]
+                    let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
+                    if abs(bearing) > 10 {
+                        //keep the rest so long as a significant turn occurs)
+                        pointsArray.append(point.coordinate)
+                    }
+                } else {
                     pointsArray.append(point.coordinate)
                 }
-            } else {
-                pointsArray.append(point.coordinate)
             }
+            pointsArray.enumerated().forEach({ index, coord in
+                nodes[index + 1] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: Constants.downArrow)
+            })
         }
-        pointsArray.enumerated().forEach({ index, coord in
-            nodes[index + 1] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: Constants.downArrow)
-        })
-
-//        for (index, step) in route.steps.enumerated() {
-//            nodeGroup.enter()
-//            let polyCoord = step.polyline.coordinate
-//            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
-//                guard let location = location else {
-//                    nodeGroup.leave()
-//                    return
-//                }
-//                location.name = "step \(index)"
-//                nodes[index + 1] = location
-//                print("got node for step \(index), alt: \(location.altitude ?? 999)")
-//                nodeGroup.leave()
-//            })
-//        }
-        nodeGroup.notify(queue: .main) {
-            print("finished getting nodes, \(nodes.count)")
-            completion(nodes)
-        }
+        //nodeGroup.notify(queue: .main) {
+        print("finished getting nodes, \(nodes.count)")
+        completion(nodes)
+        //}
     }
     
     static func buildNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees, altitude: CLLocationDistance, imageName: String) -> LocationAnnotationNode {
@@ -94,13 +95,5 @@ final class NodeFactory {
         let location = CLLocation(coordinate: coordinate, altitude: altitude)
         let image = UIImage(named: imageName)!
         return LocationAnnotationNode(location: location, image: image)
-    }
-}
-
-extension CLLocationCoordinate2D {
-    static func == (left: CLLocationCoordinate2D, right: CLLocationCoordinate2D)-> Bool {
-        let latEqual = left.latitude == right.latitude
-        let lonEqual = right.longitude == left.longitude
-        return latEqual && lonEqual
     }
 }
