@@ -114,13 +114,8 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        debugNorthDirection()
+        //debugNorthDirection()
         makeLinesForNodes()
-    }
-    
-    func addAnchorsToNodes() {
-        nodesOrdered.values.forEach({ node in
-        })
     }
     
     func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> LocationNode {

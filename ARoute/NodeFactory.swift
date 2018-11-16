@@ -50,32 +50,41 @@ final class NodeFactory {
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         let nodeGroup = DispatchGroup()
-//        let pointCount = route.polyline.pointCount
-//        for i in 0 ..< pointCount {
-//            let point = route.polyline.points()[i]
-//            let lat = point.coordinate.latitude
-//            let lon = point.coordinate.longitude
-//            if i % 2 == 0 {
-//                nodes[i + 1] = buildNode(latitude: lat, longitude: lon, altitude: 0, imageName: Constants.tinyTrsp)
-//            }
-//        }
-//
-        for (index, step) in route.steps.enumerated() {
-            nodeGroup.enter()
-            let polyCoord = step.polyline.coordinate
-            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
-                guard let location = location else {
-                    nodeGroup.leave()
-                    return
+        let pointCount = route.polyline.pointCount
+        var pointsArray: [CLLocationCoordinate2D] = []
+        for i in 0 ..< pointCount {
+            let point = route.polyline.points()[i]
+            if i > 0 && i < (pointCount - 1) { //keep first and last point
+                let lastPoint = route.polyline.points()[i - 1]
+                let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
+                if abs(bearing) > 10 {
+                    //keep the rest so long as a significant turn occurs)
+                    pointsArray.append(point.coordinate)
                 }
-                location.name = "step \(index)"
-                nodes[index + 1] = location
-                print("got node for step \(index), alt: \(location.altitude ?? 999)")
-                nodeGroup.leave()
-            })
+            } else {
+                pointsArray.append(point.coordinate)
+            }
         }
+        pointsArray.enumerated().forEach({ index, coord in
+            nodes[index + 1] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: Constants.downArrow)
+        })
+
+//        for (index, step) in route.steps.enumerated() {
+//            nodeGroup.enter()
+//            let polyCoord = step.polyline.coordinate
+//            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
+//                guard let location = location else {
+//                    nodeGroup.leave()
+//                    return
+//                }
+//                location.name = "step \(index)"
+//                nodes[index + 1] = location
+//                print("got node for step \(index), alt: \(location.altitude ?? 999)")
+//                nodeGroup.leave()
+//            })
+//        }
         nodeGroup.notify(queue: .main) {
-            print("finished getting nodes")
+            print("finished getting nodes, \(nodes.count)")
             completion(nodes)
         }
     }
