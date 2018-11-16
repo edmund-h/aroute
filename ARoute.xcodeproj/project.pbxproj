@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		491DC6F8219F67BD00CF008A /* CLLocationCoordinate2D + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491DC6F7219F67BD00CF008A /* CLLocationCoordinate2D + Extensions.swift */; };
 		88C439622191EB6F00415216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C439612191EB6F00415216 /* AppDelegate.swift */; };
 		88C439642191EB6F00415216 /* SceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C439632191EB6F00415216 /* SceneViewController.swift */; };
 		88C439672191EB7000415216 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88C439652191EB7000415216 /* Main.storyboard */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		456FA1146B7858D46679DD63 /* Pods-ARoute.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARoute.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARoute/Pods-ARoute.release.xcconfig"; sourceTree = "<group>"; };
+		491DC6F7219F67BD00CF008A /* CLLocationCoordinate2D + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D + Extensions.swift"; sourceTree = "<group>"; };
 		88C4395E2191EB6E00415216 /* ARoute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARoute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88C439612191EB6F00415216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88C439632191EB6F00415216 /* SceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				88C439752191F47C00415216 /* RoutingClient.swift */,
 				88C4399621961A6300415216 /* SceneLocationView + Extensions.swift */,
 				88C4397F219384C200415216 /* SCNVector3+Extensions.swift */,
+				491DC6F7219F67BD00CF008A /* CLLocationCoordinate2D + Extensions.swift */,
 				88C4397D219216DA00415216 /* ARCLPlace.swift */,
 				88C43977219202ED00415216 /* Constants.swift */,
 				88C439652191EB7000415216 /* Main.storyboard */,
@@ -246,6 +249,7 @@
 				88C439762191F47C00415216 /* RoutingClient.swift in Sources */,
 				88C439642191EB6F00415216 /* SceneViewController.swift in Sources */,
 				88C439622191EB6F00415216 /* AppDelegate.swift in Sources */,
+				491DC6F8219F67BD00CF008A /* CLLocationCoordinate2D + Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

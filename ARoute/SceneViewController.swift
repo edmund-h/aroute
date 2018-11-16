@@ -123,13 +123,14 @@ extension SceneViewController: SceneLocationViewDelegate {
         })
     }
     
-    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> SCNNode{
+    func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> LocationNode {
         
         let lengthVector = vector1 - vector2
         let length = lengthVector.length()
         let line = SCNCylinder(radius: radius, height: CGFloat(length))
         line.radialSegmentCount = 12
-        let node = SCNNode(geometry: line)
+        let node = LocationNode(location: nil)
+        node.geometry = line
         node.position = (vector1 + vector2)/2
         node.eulerAngles = SCNVector3.lineEulerAngles(vector: lengthVector)
         return node
@@ -153,6 +154,10 @@ extension SceneViewController: SceneLocationViewDelegate {
                 let nextNodePosition = nextNode.position
                 let thisNodePosition = thisNode.position
                 let lineNode = lineFrom(thisNodePosition, to: nextNodePosition)
+                let thisCoord = thisNode.location.coordinate
+                let nextCoord = nextNode.location.coordinate
+                let lineCoords = (thisCoord + nextCoord)/CLLocationCoordinate2D(latitude: 2, longitude: 2)
+                lineNode.location = CLLocation(coordinate: lineCoords, altitude: 0)
                 lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
                 sceneLocationView.scene.rootNode.addChildNode(lineNode)
                 if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
