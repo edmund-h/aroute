@@ -156,6 +156,7 @@ extension SceneViewController: SceneLocationViewDelegate {
             let myLoc = estimate.location
             let distanceToNextStep = myLoc.distance(from: nextNode.location)
             guard distanceToNextStep > 10 else {
+                removeOldLineFrom(node: thisNode)
                 currentStep += 1
                 makeLinesForCurrentStep()
                 return
@@ -164,10 +165,14 @@ extension SceneViewController: SceneLocationViewDelegate {
             lineNode.location = CLLocation(coordinate: lineCoords, altitude: 0)
             lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
             sceneLocationView.scene.rootNode.addChildNode(lineNode)
-            if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
-                oldLine.removeFromParentNode()
-            }
+            removeOldLineFrom(node: thisNode)
             nodesAndLines[thisNode] = lineNode
+        }
+    }
+    
+    func removeOldLineFrom(node: LocationAnnotationNode) {
+        if let oldLine = nodesAndLines[node] as? SCNNode {
+            oldLine.removeFromParentNode()
         }
     }
     
