@@ -25,7 +25,7 @@ class SceneViewController: UIViewController {
     var nodes: Nodes {
         return Array(nodesAndLines.keys)
     }
-    
+    var currentStep: Int = 1
     var updateUserLocationTimer: Timer?
 
     override func viewDidLoad() {
@@ -114,8 +114,8 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        //debugNorthDirection()
-        makeLinesForNodes()
+        debugNorthDirection()
+        makeLinesForCurrentStep()
     }
     
     func lineFrom(_ vector1: SCNVector3, to vector2: SCNVector3, radius: CGFloat = 1) -> LocationNode {
@@ -139,28 +139,36 @@ extension SceneViewController: SceneLocationViewDelegate {
                 locationNode: $0
             )
         })
-        makeLinesForNodes()
+        makeLinesForCurrentStep()
     }
     
-    func makeLinesForNodes() {
-        nodesOrdered.keys.forEach({ index in
-            if let thisNode = nodesOrdered[index - 1],
-                let nextNode = nodesOrdered[index] {
-                let nextNodePosition = nextNode.position
-                let thisNodePosition = thisNode.position
-                let lineNode = lineFrom(thisNodePosition, to: nextNodePosition)
-                let thisCoord = thisNode.location.coordinate
-                let nextCoord = nextNode.location.coordinate
-                let lineCoords = (thisCoord + nextCoord)/CLLocationCoordinate2D(latitude: 2, longitude: 2)
-                lineNode.location = CLLocation(coordinate: lineCoords, altitude: 0)
-                lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
-                sceneLocationView.scene.rootNode.addChildNode(lineNode)
-                if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
-                    oldLine.removeFromParentNode()
-                }
-                nodesAndLines[thisNode] = lineNode
+    func makeLinesForCurrentStep() {
+        if let thisNode = nodesOrdered[currentStep - 1],
+            let nextNode = nodesOrdered[currentStep] {
+            let nextNodePosition = nextNode.position
+            let thisNodePosition = thisNode.position
+            let lineNode = lineFrom(thisNodePosition, to: nextNodePosition)
+            let thisCoord = thisNode.location.coordinate
+            let nextCoord = nextNode.location.coordinate
+            guard let estimate = sceneLocationView.bestLocationEstimate() else {
+                return
             }
-        })
+            let myLoc = estimate.location
+            let distanceToNextStep = myLoc.distance(from: nextNode.location)
+            guard distanceToNextStep > 10 else {
+                currentStep += 1
+                makeLinesForCurrentStep()
+                return
+            }
+            let lineCoords = (thisCoord + nextCoord)/CLLocationCoordinate2D(latitude: 2, longitude: 2)
+            lineNode.location = CLLocation(coordinate: lineCoords, altitude: 0)
+            lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
+            sceneLocationView.scene.rootNode.addChildNode(lineNode)
+            if let oldLineOpt = nodesAndLines[thisNode], let oldLine = oldLineOpt {
+                oldLine.removeFromParentNode()
+            }
+            nodesAndLines[thisNode] = lineNode
+        }
     }
     
     func debugNorthDirection() {

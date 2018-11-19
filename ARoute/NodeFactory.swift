@@ -21,7 +21,7 @@ final class NodeFactory {
     static func buildDemoData(completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         
-        let addr1 = "3600 W Bayshore RdPalo Alto, CA 94303"
+        let addr1 = "3600 W Bayshore Rd, Palo Alto, CA 94303"
         let addr2 = "4050 Middlefield Rd, Palo Alto, CA 94303"
         let address1 = RoutingClient.originAddress ?? addr1
         let address2 = RoutingClient.destAddress ?? addr2
@@ -32,15 +32,15 @@ final class NodeFactory {
             guard let route = route else { completion([:]); return }
             nodesFromRoute(route: route, completion: { routeNodes in
                 if let origin = RoutingClient.lastOrigin {
-                    origin.name = "origin"
-                    nodes[0] = origin
-                    print("got origin, alt: \(origin.altitude ?? 999)")
+//                    origin.name = "origin"
+//                    nodes[0] = origin
+//                    print("got origin, alt: \(origin.altitude ?? 999)")
                 }
                 routeNodes.keys.forEach({nodes[$0] = routeNodes[$0]!})
                 if let destination = RoutingClient.lastDestination {
-                    destination.name = "destination"
-                    nodes[nodes.count] = destination
-                    print("got destination, alt: \(destination.altitude ?? 999)")
+//                    destination.name = "destination"
+//                    nodes[nodes.count] = destination
+                    print("got destination, coords: \(destination.coordinate!) alt: \(destination.altitude ?? 999)")
                 }
                 completion(nodes)
             })
@@ -50,8 +50,8 @@ final class NodeFactory {
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         let nodeGroup = DispatchGroup()
-        
-        for (index, step) in route.steps.enumerated() {
+        var pointsArray: [CLLocationCoordinate2D] = []
+        for step in RoutingClient.hardCodedTestRoute {//route.steps.enumerated() { //go back to this to get routes again
             //            nodeGroup.enter()
             //            let polyCoord = step.polyline.coordinate
             //            RoutingClient.locationFrom(coordinate: polyCoord, completion: { location in
@@ -64,26 +64,26 @@ final class NodeFactory {
             //                print("got node for step \(index), alt: \(location.altitude ?? 999)")
             //                nodeGroup.leave()
             //            })
-            guard index == 0 else {continue}
-            let pointCount = step.polyline.pointCount
-            var pointsArray: [CLLocationCoordinate2D] = []
+            //guard index == 0 else {continue}
+            let pointCount = step.pointCount //step.polyline.pointCount //needed for routes
             for i in 0 ..< pointCount {
-                let point = route.polyline.points()[i]
-                if i > 0 && i < (pointCount - 1) { //keep first and last point
-                    let lastPoint = route.polyline.points()[i - 1]
-                    let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
-                    if abs(bearing) > 10 {
-                        //keep the rest so long as a significant turn occurs)
-                        pointsArray.append(point.coordinate)
-                    }
-                } else {
-                    pointsArray.append(point.coordinate)
-                }
+                let point = step.points()[i]//route.polyline.points()[i] //for route
+//                if i > 0 && i < (pointCount - 1) { //keep first and last point
+//                    let lastPoint = route.polyline.points()[i - 1]
+//                    let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
+//                    if abs(bearing) > 10 {
+//                        //keep the rest so long as a significant turn occurs)
+//                        pointsArray.append(point.coordinate)
+//                    }
+//                } else {
+//                    pointsArray.append(point.coordinate)
+//                }
+                pointsArray.append(point.coordinate)
             }
-            pointsArray.enumerated().forEach({ index, coord in
-                nodes[index + 1] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: Constants.downArrow)
-            })
         }
+        pointsArray.enumerated().forEach({ index, coord in
+            nodes[index] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: Constants.downArrow)
+        })
         //nodeGroup.notify(queue: .main) {
         print("finished getting nodes, \(nodes.count)")
         completion(nodes)

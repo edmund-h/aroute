@@ -51,6 +51,12 @@ extension CLLocationCoordinate2D: Equatable {
         let x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lam1-lam2)
         return atan2(y, x).radiansToDegrees
     }
+    
+    static func makeFrom(coordinateSet: [(lat: Double, long: Double)])-> [CLLocationCoordinate2D] {
+        return coordinateSet.map({ (lat: Double, long: Double) in
+            return CLLocationCoordinate2D(latitude: lat, longitude: long)
+        })
+    }
 }
 
 extension CLLocationCoordinate2D: Hashable {

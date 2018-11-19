@@ -85,4 +85,30 @@ final class RoutingClient {
             }
         }
     }
+    
+    static var hardCodedTestRoute: [MKPolyline] {
+        get {
+            let coords = CLLocationCoordinate2D.makeFrom(coordinateSet: [
+                (37.433105, -122.107467),
+                (37.433282, -122.107201),
+                (37.432986, -122.106853),
+                (37.432298, -122.106161)
+            ])
+            var lastCoord: CLLocationCoordinate2D? = nil
+            var route = [MKPolyline]()
+            coords.enumerated().forEach({step, thisCoord in
+                if let lastCoord = lastCoord {
+                    let polyline = MKPolyline(coordinates: [lastCoord, thisCoord], count: 2)
+                        let loc1 = CLLocation(coordinate: lastCoord, altitude: 0)
+                        let loc2 = CLLocation(coordinate: thisCoord, altitude: 0)
+                        let dist = loc1.distance(from: loc2)
+                        let delta = CLLocationCoordinate2D.bearingDelta(between: lastCoord, and: thisCoord)
+                        print("step \(step) distance: \(dist) bearing: \(delta)")
+                    route.append(polyline)
+                }
+                lastCoord = thisCoord
+            })
+            return route
+        }
+    }
 }
