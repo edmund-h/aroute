@@ -22,26 +22,26 @@ final class NodeFactory {
         var nodes: OrderedNodes = [:]
         
         let addr1 = "3600 W Bayshore Rd, Palo Alto, CA 94303"
-        let addr2 = "4050 Middlefield Rd, Palo Alto, CA 94303"
+        let addr2 = "2624 Brady Ct, Santa Clara, CA"
         let address1 = RoutingClient.originAddress ?? addr1
         let address2 = RoutingClient.destAddress ?? addr2
         
         print("start")
         
         RoutingClient.routeTo(address2, from: address1, completion: { route in
-            guard let route = route else { completion([:]); return }
-            nodesFromRoute(route: route, completion: { routeNodes in
-                if let origin = RoutingClient.lastOrigin {
+            //guard let route = route else { completion([:]); return }
+            nodesFromRouteStep(1, completion: { routeNodes in
+//                if let origin = RoutingClient.lastOrigin {
 //                    origin.name = "origin"
 //                    nodes[0] = origin
 //                    print("got origin, alt: \(origin.altitude ?? 999)")
-                }
+//                }
                 routeNodes.keys.forEach({nodes[$0] = routeNodes[$0]!})
-                if let destination = RoutingClient.lastDestination {
+//                if let destination = RoutingClient.lastDestination {
 //                    destination.name = "destination"
 //                    nodes[nodes.count] = destination
-                    print("got destination, coords: \(destination.coordinate!) alt: \(destination.altitude ?? 999)")
-                }
+//                    print("got destination, coords: \(destination.coordinate!) alt: \(destination.altitude ?? 999)")
+//                }
                 completion(nodes)
             })
         })
@@ -49,7 +49,6 @@ final class NodeFactory {
     
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
-        let nodeGroup = DispatchGroup()
         var pointsArray: [CLLocationCoordinate2D] = []
         for step in RoutingClient.hardCodedTestRoute {//route.steps.enumerated() { //go back to this to get routes again
             //            nodeGroup.enter()
@@ -88,6 +87,41 @@ final class NodeFactory {
         print("finished getting nodes, \(nodes.count)")
         completion(nodes)
         //}
+    }
+    
+    static func nodesFromRouteStep(_ index: Int, completion: OrderedNodeCompletion) {
+        var nodes: OrderedNodes = [:]
+        guard let route = RoutingClient.lastRoute, index < route.steps.count else {
+            completion(nodes)
+            return
+        }
+        let step = route.steps[index]
+        let pointCount = step.polyline.pointCount //needed for routes
+        var lastIndex = pointCount - 1
+        let addNode = { (coord: CLLocationCoordinate2D, index: Int) in
+            var imageName = Constants.tinyTrsp
+            if index == lastIndex {
+                let desc = step.description
+                imageName = DirectionType.from(direction: desc)
+            }
+            nodes[index] = buildNode(latitude: coord.latitude, longitude: coord.longitude, altitude: 0, imageName: imageName)
+        }
+        for i in 0 ..< pointCount {
+            let point = step.polyline.points()[i]
+            if i > 0 && i < (lastIndex) { //keep first and last point
+                let lastPoint = route.polyline.points()[i - 1]
+                let bearing = CLLocationCoordinate2D.bearingDelta(between: point.coordinate, and: lastPoint.coordinate)
+                if abs(bearing) > 10 {
+                    //keep the rest so long as a significant turn occurs)
+                    addNode(point.coordinate, i)
+                }
+            } else {
+                addNode(point.coordinate, i)
+            }
+            print(point.coordinate)
+        }
+        print(step.instructions)
+        completion(nodes)
     }
     
     static func buildNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees, altitude: CLLocationDistance, imageName: String) -> LocationAnnotationNode {

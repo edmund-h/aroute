@@ -114,7 +114,7 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-        debugNorthDirection()
+        //debugNorthDirection()
         makeLinesForCurrentStep()
     }
     
@@ -143,24 +143,24 @@ extension SceneViewController: SceneLocationViewDelegate {
     }
     
     func makeLinesForCurrentStep() {
-        if let thisNode = nodesOrdered[currentStep - 1],
-            let nextNode = nodesOrdered[currentStep] {
+        guard let estimate = sceneLocationView.bestLocationEstimate() else {
+            return
+        }
+        let myLoc = estimate.location
+        if RoutingClient.location(myLoc, isCloseToEndOfStep: currentStep) {
+            nodes.forEach({removeOldLineFrom(node: $0)})
+            currentStep += 1
+            NodeFactory.nodesFromRouteStep(currentStep, completion: setNodes(_:))
+            return
+        }
+        nodesOrdered.keys.forEach({ index in
+        if let thisNode = nodesOrdered[index - 1],
+            let nextNode = nodesOrdered[index] {
             let nextNodePosition = nextNode.position
             let thisNodePosition = thisNode.position
             let lineNode = lineFrom(thisNodePosition, to: nextNodePosition)
             let thisCoord = thisNode.location.coordinate
             let nextCoord = nextNode.location.coordinate
-            guard let estimate = sceneLocationView.bestLocationEstimate() else {
-                return
-            }
-            let myLoc = estimate.location
-            let distanceToNextStep = myLoc.distance(from: nextNode.location)
-            guard distanceToNextStep > 10 else {
-                removeOldLineFrom(node: thisNode)
-                currentStep += 1
-                makeLinesForCurrentStep()
-                return
-            }
             let lineCoords = (thisCoord + nextCoord)/CLLocationCoordinate2D(latitude: 2, longitude: 2)
             lineNode.location = CLLocation(coordinate: lineCoords, altitude: 0)
             lineNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.9)
@@ -168,6 +168,8 @@ extension SceneViewController: SceneLocationViewDelegate {
             removeOldLineFrom(node: thisNode)
             nodesAndLines[thisNode] = lineNode
         }
+            
+        })
     }
     
     func removeOldLineFrom(node: LocationAnnotationNode) {

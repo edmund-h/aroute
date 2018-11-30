@@ -49,7 +49,9 @@ extension CLLocationCoordinate2D: Equatable {
         let lam2 = coord2.longitude
         let y = sin(lam1 - lam2) * cos(phi2)
         let x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(lam1-lam2)
-        return atan2(y, x).radiansToDegrees
+        let bearing = atan2(y, x).radiansToDegrees
+        let bearingDelta = abs(180-abs(bearing))
+        return bearingDelta
     }
     
     static func makeFrom(coordinateSet: [(lat: Double, long: Double)])-> [CLLocationCoordinate2D] {

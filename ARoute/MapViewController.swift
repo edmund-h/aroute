@@ -60,14 +60,6 @@ extension MapViewController: MKMapViewDelegate {
         if (overlay is MKPolyline),
             let polyline = overlay as? MKPolyline {
             let addr = polyline.points()
-            
-//            let pointee = addr.pointee
-//            var pointsArray: [MKMapPoint] = []
-//            while pointee is MKMapPoint {
-//
-//                print(pointee)
-//            }
-//            print("\(pointCount)")
             let red = UIColor.red.withAlphaComponent(0.75)
             polylineRenderer.strokeColor = red
             polylineRenderer.lineWidth = 5

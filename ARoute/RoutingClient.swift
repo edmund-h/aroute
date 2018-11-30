@@ -62,6 +62,20 @@ final class RoutingClient {
         })
     }
     
+    static func location(_ location: CLLocation, isCloseToEndOfStep index: Int)-> Bool {
+        guard let route = lastRoute else {return false}
+        let polyline = route.steps[index].polyline
+        let pointCount = polyline.pointCount
+        let stepEnd = polyline.points()[pointCount - 1]
+        let endLoc = CLLocation(coordinate: stepEnd.coordinate, altitude: 0)
+        return endLoc.distance(from: location) < distanceForNextStep()
+    }
+    
+    static func distanceForNextStep()-> Double {
+        if lastRoute?.transportType == .automobile { return 50 }
+        return 10
+    }
+    
     static func geocode(address: String, completion: @escaping PlaceCompletion) {
         CLGeocoder().geocodeAddressString(address) { (placemarks, error) in
             if let first = placemarks?.first {
@@ -92,7 +106,9 @@ final class RoutingClient {
                 (37.433105, -122.107467),
                 (37.433282, -122.107201),
                 (37.432986, -122.106853),
-                (37.432298, -122.106161)
+                (37.432298, -122.106161),
+                (37.432298, -122.105807),
+                (37.431788, -122.105807)
             ])
             var lastCoord: CLLocationCoordinate2D? = nil
             var route = [MKPolyline]()
