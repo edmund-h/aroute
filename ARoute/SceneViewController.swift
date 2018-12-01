@@ -222,3 +222,15 @@ extension CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: lat2 * 180 / Double.pi, longitude: lon2 * 180 / Double.pi)
     }
 }
+
+//TESTING
+extension SceneViewController {
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        let image = UIImage(named: Constants.downArrow)!
+        let annotationNode = LocationAnnotationNode(location: nil, image: image)
+        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
+    }
+}
