@@ -42,7 +42,7 @@ class SceneViewController: UIViewController {
         let name = Notification.Name.init("newNodes")
         NotificationCenter.default.addObserver(self, selector: #selector(addNewNodes(_:)), name: name, object: nil)
         
-        NodeFactory.buildDemoData(completion: { nodes in
+        NodeFactory.nodesFromSavedData(completion: { nodes in
             self.nodes.forEach({
                 self.sceneLocationView.removeLocationNode(locationNode: $0)
             })
@@ -230,6 +230,14 @@ extension SceneViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         let image = UIImage(named: Constants.downArrow)!
+        guard let loc = sceneLocationView.bestLocationEstimate()?.location,
+            let place = SavedPlace(data: [
+                SavedPlace.latKey : loc.coordinate.latitude,
+                SavedPlace.lonKey : loc.coordinate.longitude,
+                SavedPlace.altKey : loc.altitude,
+                SavedPlace.textKey: "no text"
+                ]) else { return }
+        DefaultsClient.add(place: place)
         let annotationNode = LocationAnnotationNode(location: nil, image: image)
         sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
     }

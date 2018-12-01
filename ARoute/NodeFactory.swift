@@ -47,6 +47,23 @@ final class NodeFactory {
         })
     }
     
+    static func nodesFromSavedData(completion: @escaping OrderedNodeCompletion){
+        var nodes: OrderedNodes = [:]
+        let places = DefaultsClient.get()
+        let group = DispatchGroup()
+        places.enumerated().forEach({ index, place in
+            group.enter()
+            let coord = CLLocationCoordinate2D(latitude: place.lat, longitude: place.lon)
+            RoutingClient.locationFrom(coordinate: coord, completion: { place in
+                nodes[index] = place
+                group.leave()
+            })
+        })
+        group.notify(queue: .main, execute: {
+            completion(nodes)
+        })
+    }
+    
     static func nodesFromRoute(route: MKRoute, completion: @escaping OrderedNodeCompletion) {
         var nodes: OrderedNodes = [:]
         var pointsArray: [CLLocationCoordinate2D] = []
