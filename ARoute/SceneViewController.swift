@@ -226,6 +226,17 @@ extension CLLocationCoordinate2D {
 //TESTING
 extension SceneViewController {
     
+    @IBAction func clear() {
+        DefaultsClient.clear()
+        DefaultsClient.setup()
+        nodesOrdered.keys.forEach({ index in
+            guard let node = nodesOrdered[index] else {return}
+            removeOldLineFrom(node: node)
+            node.removeFromParentNode()
+            nodesOrdered[index] = nil
+            nodesAndLines[node] = nil
+        })
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -239,6 +250,8 @@ extension SceneViewController {
                 ]) else { return }
         DefaultsClient.add(place: place)
         let annotationNode = LocationAnnotationNode(location: nil, image: image)
+        let count = nodesOrdered.count
+        nodesOrdered[count] = annotationNode
         sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
     }
 }

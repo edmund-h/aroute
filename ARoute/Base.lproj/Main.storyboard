@@ -34,10 +34,22 @@
                                             <action selector="setNorth" destination="BYZ-38-t0r" eventType="touchUpInside" id="LWa-NF-ozE"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Rs-k4p">
+                                        <rect key="frame" x="19" y="528" width="43" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="Clear">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="clear" destination="BYZ-38-t0r" eventType="touchUpInside" id="B5m-PQ-m2h"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="J1F-Rs-k4p" firstAttribute="centerY" secondItem="HXI-pc-NdK" secondAttribute="centerY" id="1cZ-mE-LLR"/>
                                     <constraint firstItem="VfX-rg-NIy" firstAttribute="centerX" secondItem="sNQ-L3-nZV" secondAttribute="centerX" id="DMt-ph-dTJ"/>
+                                    <constraint firstItem="J1F-Rs-k4p" firstAttribute="leading" secondItem="sNQ-L3-nZV" secondAttribute="leading" constant="19" id="Ong-0y-cHM"/>
                                     <constraint firstAttribute="bottom" secondItem="HXI-pc-NdK" secondAttribute="bottom" constant="30" id="RIC-ZX-Ad9"/>
                                     <constraint firstItem="VfX-rg-NIy" firstAttribute="top" secondItem="sNQ-L3-nZV" secondAttribute="top" constant="56" id="Vs2-M7-eDl"/>
                                     <constraint firstAttribute="trailing" secondItem="HXI-pc-NdK" secondAttribute="trailing" constant="18" id="kjt-O1-C1Y"/>
@@ -69,6 +81,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="8ug-ST-V8Y" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nzU-4R-Mmb">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
